@@ -1,0 +1,5 @@
+preencher constitutions.md
+speckit.specify
+speckit.plan
+speckit.task
+implements

@@ -1,0 +1,38 @@
+@import "tailwindcss";
+
+/*
+  Paleta de cores — fonte única: theme.config.mjs (raiz do projeto)
+  Ao trocar um hex aqui, atualize também o valor correspondente em theme.config.mjs
+  e rode: npm run generate-icons
+*/
+@theme {
+  --color-brand-blue: #272d4d;
+  --color-brand-green: #83b8aa;
+  --color-brand-yellow: #ffb350;
+  --color-brand-red: #ff6a5a;
+  --color-brand-gray-dark: #1F2937;
+  --color-brand-gray-light: #F3F4F6;
+  --color-brand-bg: #F5F6F8;
+}
+
+/* T095: Toast slide-in animation */
+@keyframes slide-in-from-right {
+  from { transform: translateX(110%); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+.animate-in.slide-in-from-right {
+  animation: slide-in-from-right 0.22s ease-out both;
+}
+
+/* T097: Respect prefers-reduced-motion — remove all transitions/animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration:   0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration:  0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
