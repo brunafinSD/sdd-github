@@ -1,8 +1,11 @@
 // T036, T049, T099: Header layout component with optional back button and PWA install prompt
+// T006 [US3]: logout button when no back action (Dashboard-level pages)
 
 import { ReactNode } from 'react'
-import { ChevronLeftIcon, ArrowDownTrayIcon } from '@heroicons/react/24/outline'
+import { ChevronLeftIcon, ArrowDownTrayIcon, ArrowRightOnRectangleIcon } from '@heroicons/react/24/outline'
+import { useNavigate } from 'react-router-dom'
 import { usePwaInstall } from '@/hooks/usePwaInstall'
+import { useAuthStore } from '@/store/authStore'
 
 interface HeaderProps {
   title?: string
@@ -12,6 +15,13 @@ interface HeaderProps {
 
 export function Header({ title = 'Fut da quinta', children, onBack }: HeaderProps) {
   const { canInstall, install } = usePwaInstall()
+  const logout = useAuthStore(s => s.logout)
+  const navigate = useNavigate()
+
+  const handleLogout = () => {
+    logout()
+    navigate('/login', { replace: true })
+  }
 
   return (
     <header className="bg-brand-blue text-white shadow-md">
@@ -42,6 +52,18 @@ export function Header({ title = 'Fut da quinta', children, onBack }: HeaderProp
                 className="text-white/80 hover:text-white transition-colors"
               >
                 <ArrowDownTrayIcon className="w-6 h-6" />
+              </button>
+            )}
+
+            {/* T006: Logout — only on root-level pages (no back button) */}
+            {!onBack && (
+              <button
+                onClick={handleLogout}
+                aria-label="Sair"
+                title="Sair"
+                className="text-white/70 hover:text-white transition-colors p-1"
+              >
+                <ArrowRightOnRectangleIcon className="w-5 h-5" />
               </button>
             )}
           </div>

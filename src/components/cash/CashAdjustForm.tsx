@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
+import { PlusCircleIcon, MinusCircleIcon } from '@heroicons/react/24/outline'
 import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
@@ -55,7 +56,7 @@ export function CashAdjustForm({ onSubmit, loading }: CashAdjustFormProps) {
               : 'border-gray-200 text-gray-500 hover:border-gray-300'
           }`}>
             <input type="radio" value="entrada" {...register('type')} className="sr-only" />
-            <span className="text-lg">↑</span>
+            <PlusCircleIcon className="w-5 h-5" />
             <span className="font-medium">Entrada</span>
           </label>
           <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-lg border-2 cursor-pointer transition-colors ${
@@ -64,7 +65,7 @@ export function CashAdjustForm({ onSubmit, loading }: CashAdjustFormProps) {
               : 'border-gray-200 text-gray-500 hover:border-gray-300'
           }`}>
             <input type="radio" value="saida" {...register('type')} className="sr-only" />
-            <span className="text-lg">↓</span>
+            <MinusCircleIcon className="w-5 h-5" />
             <span className="font-medium">Saída</span>
           </label>
         </div>
@@ -139,7 +140,9 @@ export function CashAdjustForm({ onSubmit, loading }: CashAdjustFormProps) {
       >
         {loading
           ? <Spinner size="sm" />
-          : type === 'entrada' ? '↑ Registrar Entrada' : '↓ Registrar Saída'}
+          : type === 'entrada'
+            ? <span className="flex items-center justify-center gap-2"><PlusCircleIcon className="w-5 h-5" /> Registrar Entrada</span>
+            : <span className="flex items-center justify-center gap-2"><MinusCircleIcon className="w-5 h-5" /> Registrar Saída</span>}
       </Button>
     </form>
   )
