@@ -13,7 +13,7 @@ export const theme = {
   colorPrimary:  '#272d4d',  // brand-blue   → navy escuro
 
   /** Positivo — saldo positivo, jogo concluído, valores a receber */
-  colorSuccess:  '#83b8aa',  // brand-green  → verde-água suave
+  colorSuccess:  '#35997e',  // brand-green  → verde-água suave
 
   /** Negativo/alertas/erros/atenção — saídas, saldo negativo */
   colorDanger:   '#ff6a5a',  // brand-red    → coral

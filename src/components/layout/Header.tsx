@@ -10,7 +10,7 @@ interface HeaderProps {
   onBack?: () => void
 }
 
-export function Header({ title = 'Futsal Cash Manager', children, onBack }: HeaderProps) {
+export function Header({ title = 'Fut da quinta', children, onBack }: HeaderProps) {
   const { canInstall, install } = usePwaInstall()
 
   return (

@@ -1,4 +1,4 @@
-// T067-T070, T076: CashAdjustForm with React Hook Form + Zod validation
+// T018 (002-dual-cash-split): CashAdjustForm with cashTarget radio selector
 
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -7,9 +7,10 @@ import { Input } from '@/components/ui/Input'
 import { Button } from '@/components/ui/Button'
 import { Spinner } from '@/components/ui/Spinner'
 
-// T076: Zod schema with justification validation (min 5, max 500)
+// Zod schema with justification + cashTarget (default: adm)
 const cashAdjustSchema = z.object({
   type: z.enum(['entrada', 'saida']),
+  cashTarget: z.enum(['court', 'adm']),
   amount: z
     .string()
     .min(1, 'Informe o valor')
@@ -36,10 +37,11 @@ export function CashAdjustForm({ onSubmit, loading }: CashAdjustFormProps) {
     formState: { errors }
   } = useForm<CashAdjustFormData>({
     resolver: zodResolver(cashAdjustSchema),
-    defaultValues: { type: 'entrada' }
+    defaultValues: { type: 'entrada', cashTarget: 'adm' }
   })
 
   const type = watch('type')
+  const cashTarget = watch('cashTarget')
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" noValidate>
@@ -69,6 +71,29 @@ export function CashAdjustForm({ onSubmit, loading }: CashAdjustFormProps) {
       </div>
 
       {/* T069: Amount input */}
+      {/* T018: cashTarget radio — which drawer receives/is debited */}
+      <div>
+        <p className="block text-sm font-medium text-brand-gray-dark mb-2">Caixa</p>
+        <div className="flex gap-3">
+          <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 cursor-pointer transition-colors ${
+            cashTarget === 'adm'
+              ? 'border-brand-blue bg-brand-blue/10 text-brand-blue'
+              : 'border-gray-200 text-gray-500 hover:border-gray-300'
+          }`}>
+            <input type="radio" value="adm" {...register('cashTarget')} className="sr-only" />
+            <span className="font-medium text-sm">ADM</span>
+          </label>
+          <label className={`flex-1 flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border-2 cursor-pointer transition-colors ${
+            cashTarget === 'court'
+              ? 'border-brand-yellow bg-brand-yellow/10 text-brand-yellow'
+              : 'border-gray-200 text-gray-500 hover:border-gray-300'
+          }`}>
+            <input type="radio" value="court" {...register('cashTarget')} className="sr-only" />
+            <span className="font-medium text-sm">Quadra</span>
+          </label>
+        </div>
+      </div>
+
       <Input
         label="Valor (R$)"
         type="number"

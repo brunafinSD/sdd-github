@@ -1,13 +1,13 @@
-// T038: Seed mock data for IndexedDB
+// T011 (002-dual-cash-split): Seed mock data for IndexedDB — dual cash
 
 import { db } from './db'
 import type { Game, Player } from '@/types/game'
 import type { Transaction } from '@/types/cash'
 import { toMoney } from '@/types/money'
-import { calculateCashImpact } from '@/utils/calculations'
+import { calculateCashImpact, calculateCashImpactByTarget } from '@/utils/calculations'
 
 /** Increment this when the data model changes to force a re-seed */
-const SEED_VERSION = '2'
+const SEED_VERSION = '3'
 
 /**
  * Seed the database with mock data.
@@ -30,6 +30,7 @@ export async function seedDatabase() {
     await db.games.clear()
     await db.players.clear()
     await db.transactions.clear()
+    await db.transfers.clear()
   }
 
   console.log('Seeding database (v' + SEED_VERSION + ')...')
@@ -146,17 +147,32 @@ export async function seedDatabase() {
   const game1CashImpact = calculateCashImpact(game1Players, game1.courtCost)
   await db.games.update(game1.id, { cashImpact: game1CashImpact })
 
-  // Create transaction for game1
-  const game1Transaction: Transaction = {
+  // Create dual-cash transactions for game1 (routed by paymentMethod)
+  const { court: game1CourtImpact, adm: game1AdmImpact } = calculateCashImpactByTarget(game1Players, game1.courtCost)
+
+  const game1CourtTransaction: Transaction = {
     id: crypto.randomUUID(),
     type: 'game',
-    amount: game1CashImpact,
-    description: `Jogo finalizado - ${game1Players.length} jogadores`,
+    amount: game1CourtImpact,
+    description: `Jogo finalizado (Quadra) - ${game1Players.filter(p => p.paymentMethod === 'on_court').length} jogadores`,
     justification: null,
     gameId: game1.id,
+    cashTarget: 'court',
     createdAt: game1Date
   }
-  await db.transactions.add(game1Transaction)
+  await db.transactions.add(game1CourtTransaction)
+
+  const game1AdmTransaction: Transaction = {
+    id: crypto.randomUUID(),
+    type: 'game',
+    amount: game1AdmImpact,
+    description: `Jogo finalizado (ADM) - ${game1Players.filter(p => p.paymentMethod === 'pix').length} jogadores`,
+    justification: null,
+    gameId: game1.id,
+    cashTarget: 'adm',
+    createdAt: game1Date
+  }
+  await db.transactions.add(game1AdmTransaction)
 
   // Game 2: Yesterday, in progress
   const game2Date = new Date(currentYear, currentMonth, now.getDate() - 1)
@@ -260,6 +276,7 @@ export async function seedDatabase() {
     description: 'Doação João',
     justification: 'Doação para ajudar no caixa do time',
     gameId: null,
+    cashTarget: 'adm',
     createdAt: new Date(currentYear, currentMonth, now.getDate() - 5)
   }
   await db.transactions.add(manualEntry)

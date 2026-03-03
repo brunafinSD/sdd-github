@@ -21,7 +21,7 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'icon.png', 'robots.txt', 'splash-*.png'],
       manifest: {
-        name: 'Futsal Cash Manager',
+        name: 'Fut da quinta',
         short_name: 'Futsal Cash',
         description: 'Sistema de gerenciamento de presença e caixa para time de futsal',
         theme_color: theme.colorPrimary,

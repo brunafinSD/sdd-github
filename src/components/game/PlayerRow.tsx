@@ -61,8 +61,8 @@ export function PlayerRow({ player, editable = true, onChangePayment, onChangeAm
       ) : (
         <span className={`text-xs font-medium px-2 py-1 rounded ${
           player.paymentMethod === 'pix'
-            ? 'bg-brand-blue/10 text-brand-blue'
-            : 'bg-brand-yellow/20 text-brand-yellow'
+            ? 'bg-brand-blue text-white'
+            : 'bg-brand-yellow text-white'
         }`}>
           {player.paymentMethod === 'pix' ? 'PIX' : 'Na Quadra'}
         </span>
