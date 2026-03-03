@@ -71,7 +71,7 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
         className={`text-sm font-bold shrink-0 ${
           isTransfer
             ? 'text-brand-gray-dark'
-            : isPositive ? 'text-brand-green' : 'text-red-600'
+            : isPositive ? 'text-brand-green' : 'text-brand-red'
         }`}
       >
         {isTransfer ? formatMoney(amount) : `${isPositive ? '+' : ''}${formatMoney(amount)}`}
