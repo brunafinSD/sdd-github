@@ -31,6 +31,17 @@ Funciona 100% offline, sem backend — tudo salvo no IndexedDB do browser.
 
 ---
 
+## Acesso (POC)
+
+Login fake — sem backend, validação 100% client-side.
+
+| Campo | Valor |
+|---|---|
+| **Usuário** | `parceriasdojoguinho` |
+| **Senha** | `futdaquinta` |
+
+---
+
 ## Desenvolvimento
 
 ```bash
