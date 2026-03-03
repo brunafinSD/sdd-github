@@ -13,9 +13,10 @@ const typeConfig: Record<
   Transaction['type'],
   { label: string; variant: 'default' | 'success' | 'warning' | 'danger' | 'info' }
 > = {
-  game:       { label: 'Jogo',    variant: 'info' },
-  manual_in:  { label: 'Entrada', variant: 'success' },
-  manual_out: { label: 'Saída',   variant: 'danger' },
+  game:       { label: 'Jogo',           variant: 'info' },
+  manual_in:  { label: 'Entrada',        variant: 'success' },
+  manual_out: { label: 'Saída',          variant: 'danger' },
+  transfer:   { label: 'Quadra → ADM',  variant: 'default' },
 }
 
 // T089: Date formatting helper
@@ -41,6 +42,8 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
   }
 
   const isPositive = amount >= 0
+  // Transfers are neutral — court→adm doesn't change total
+  const isTransfer = type === 'transfer'
 
   return (
     <li
@@ -66,10 +69,12 @@ export function TransactionListItem({ transaction }: TransactionListItemProps) {
 
       <span
         className={`text-sm font-bold shrink-0 ${
-          isPositive ? 'text-brand-green' : 'text-brand-red'
+          isTransfer
+            ? 'text-brand-gray-dark'
+            : isPositive ? 'text-brand-green' : 'text-red-600'
         }`}
       >
-        {isPositive ? '+' : ''}{formatMoney(amount)}
+        {isTransfer ? formatMoney(amount) : `${isPositive ? '+' : ''}${formatMoney(amount)}`}
       </span>
     </li>
   )

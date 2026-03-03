@@ -153,17 +153,31 @@ export const useGameStore = create<GameState>((set) => ({
     set({ loading: true, error: null })
     try {
       await gameService.finalizeGame(gameId)
-      
-      // Get updated game to get cashImpact
+
+      // Get updated game to compute per-drawer cash impact
       const updatedGame = await gameService.getGameById(gameId)
       if (updatedGame) {
-        // Create transaction
-        await cashService.createGameTransaction(
-          gameId,
-          updatedGame.cashImpact,
-          `Jogo finalizado - ${updatedGame.players.length} jogadores`
-        )
-        
+        const { calculateCashImpactByTarget } = await import('@/utils/calculations')
+        const { court, adm } = calculateCashImpactByTarget(updatedGame.players, updatedGame.courtCost)
+
+        // Create one transaction per drawer (only if non-zero)
+        if (court !== 0) {
+          await cashService.createGameTransaction(
+            gameId,
+            court,
+            `Jogo finalizado (Quadra) - ${updatedGame.players.filter(p => p.paymentMethod === 'on_court').length} jogadores`,
+            'court'
+          )
+        }
+        if (adm !== 0) {
+          await cashService.createGameTransaction(
+            gameId,
+            adm,
+            `Jogo finalizado (ADM) - ${updatedGame.players.filter(p => p.paymentMethod === 'pix').length} jogadores`,
+            'adm'
+          )
+        }
+
         // Update state
         set(state => ({
           games: state.games.map(g => g.id === gameId ? updatedGame : g),

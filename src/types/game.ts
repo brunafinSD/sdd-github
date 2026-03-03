@@ -24,6 +24,8 @@ export interface Game {
   courtCost: Money
   players: Player[]
   cashImpact: Money
+  /** Amount debited from court cash as a credit against court cost (US3) */
+  courtCredit?: Money | null
   createdAt: Date
   updatedAt: Date
   finalishedAt: Date | null

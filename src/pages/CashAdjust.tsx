@@ -21,10 +21,10 @@ export function CashAdjust() {
       const raw = parseFloat(data.amount.replace(',', '.'))
 
       if (data.type === 'entrada') {
-        await addManualEntry(toMoney(raw), data.description, data.justification)
+        await addManualEntry(toMoney(raw), data.description, data.justification, data.cashTarget)
         toast.success('Entrada registrada com sucesso!')
       } else {
-        await addManualExit(toMoney(-raw), data.description, data.justification)
+        await addManualExit(toMoney(-raw), data.description, data.justification, data.cashTarget)
         toast.success('Saída registrada com sucesso!')
       }
 
